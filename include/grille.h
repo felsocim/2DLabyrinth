@@ -31,8 +31,14 @@ int salles_vides(grille * g);
 
 char afficher_element(int e);
 
-void afficher_grille(grille * g, joueur * j);
+void afficher_grille(grille * g, joueur * jr, monstre * m);
 
 void deplacement(grille * g, joueur * j);
+
+monstre * creer_monstre(grille * g);
+
+void suppr_monstre(monstre * m);
+
+void deplacement_monstre(grille * g, joueur * j, monstre * m);
 
 #endif /* end of include guard: GRILLE */

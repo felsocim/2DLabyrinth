@@ -110,6 +110,9 @@ char afficher_element(int e)
         case 3 :
             return '+';
             break;
+        case 5 :
+            return 'M';
+            break;
         case 8 :
             return 'O';
             break;
@@ -125,16 +128,18 @@ char afficher_element(int e)
 @param <joueur * j> <the gamer whose position will be loaded>
 @return <void>
 */
-void afficher_grille(grille * g, joueur * jr)
+void afficher_grille(grille * g, joueur * jr, monstre * m)
 {
-    int i,j;
     clear();
     refresh();
-    for (i=0;i<(g->n);i++)
-        for (j=0;j<(g->m);j++)
+    for (int i = 0; i < (g -> n); i++)
+        for (int j = 0; j < (g -> m); j++)
             mvprintw(i, j, "%c", afficher_element(g -> content[i][j]));
 
-    mvprintw(jr -> y, jr -> x, "*");
+    mvprintw(jr -> y, jr -> x, "J");
+    if (m -> vie > 0) {
+        mvprintw(m -> y, m -> x, "M");
+    }
     refresh();
 }
 
@@ -186,5 +191,85 @@ void deplacement(grille * g, joueur * j)
         {
             j -> vie++;
             g -> content[j -> y][j -> x] = 0;
+        }
+}
+
+monstre * creer_monstre(grille * g)
+{
+    monstre * m = (monstre *) malloc(sizeof(monstre));
+
+    for (int i = 0; i < (g -> n); i++)
+        for (int j = 0; j < (g -> m); j++)
+            if (g -> content[i][j] == 5)
+            {
+                m -> x = j;
+                m -> y = i;
+                m -> vie = 3;
+                m -> defence = 1;
+                m -> attaque = 0;
+                g -> content[i][j] = 0;
+            }
+
+    return m;
+}
+
+void suppr_monstre(monstre * m)
+{
+    free(m);
+}
+
+void deplacement_monstre(grille * g, joueur * j, monstre * m)
+{
+    int t;
+    // nord=1 ouest=3 sud=2 est=4
+    if (j -> y < m -> y)
+        t = 1;
+    else if (j -> y == m -> y)
+        t = 0;
+    else
+        t = 2;
+
+    switch (t) {
+        case 0 :
+            break;
+        case 1 :
+            if (m -> y == 1)
+                break;
+            if (g -> content[m -> y - 1][m -> x] != 1)
+                (m -> y) --;
+            break;
+        case 2 :
+            if (m -> y == g -> n - 1)
+                break;
+            if (g -> content[m -> y + 1][m -> x] != 1)
+                (m -> y) ++;
+            break;
+    }
+
+    if (j -> x < m -> x)
+        t = 3;
+    else if (j -> x == m -> x)
+        t = 0;
+    else
+        t = 4;
+
+    switch (t) {
+        case 0 :
+            break;
+        case 3 :
+            if (g -> content[m -> y ][m -> x - 1] != 1)
+                (m -> x) --;
+            break;
+        case 4 :
+            if (g -> content[m -> y ][m -> x + 1] != 1)
+                (m -> x) ++;
+            break;
+    }
+
+    if ((j -> y == m -> y) && (j -> x == m -> x))
+        while (m -> vie > 0)
+        {
+            j -> vie = j -> vie - (m -> attaque / j -> defence);
+            m -> vie = m -> vie - (j -> attaque / m -> defence);
         }
 }

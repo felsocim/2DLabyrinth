@@ -14,6 +14,8 @@ joueur * alloue_joueur()
     for (int i = 0; i < 25; i++)
         j -> inventaire[i] = (char *) malloc(20 * sizeof(char));
     j -> vie = 5;
+    j -> defence = 1;
+    j -> attaque = 2;
     return j;
 }
 

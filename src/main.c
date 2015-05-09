@@ -14,7 +14,6 @@
 int main()
 {
     char filename[256] = "data/grille.txt";
-    joueur * j = alloue_joueur();
     int choice;
 
     initscr();
@@ -37,34 +36,40 @@ int main()
             scanw("%s",filename);
         }
 
+        joueur * j = alloue_joueur();
         grille * g = creer_grille(filename, j);
-        afficher_grille(g, j);
+        monstre * m = creer_monstre(g);
 
         while (j -> vie > 0)
         {
-            afficher_grille(g, j);
-            mvprintw(g -> n + 3,1,"X: %d, Y: %d, REMAINING LIVES: %d",j -> x, j -> y,j -> vie);
+            afficher_grille(g, j, m);
+            mvprintw(g -> n + 1,1,"X: %d, Y: %d, REMAINING LIVES: %d",j -> x, j -> y,j -> vie);
             deplacement(g, j);
+            if (m -> vie > 0) {
+                deplacement_monstre(g, j, m);
+            }
 
             if (g -> content[j -> y][j -> x] == 8)
             {
-                mvprintw(g -> n + 4,1,"YOU WON --> Press any key to quit!");
+                mvprintw(g -> n + 2,1,"YOU WON --> Press any key to quit!");
                 refresh();
                 getch();
                 endwin();
+                suppr_grille(g);
+                suppr_joueur(j);
+                suppr_monstre(m);
                 exit(0);
             }
         }
 
-        if (j -> vie <= 0)
-        {
-            mvprintw(g -> n + 4,1,"GAME OVER --> Press any key to quit!");
-            refresh();
-            getch();
-            endwin();
-            exit(0);
-        }
+        mvprintw(g -> n + 2,1,"GAME OVER --> Press any key to quit!");
+        refresh();
+        getch();
+        endwin();
         suppr_grille(g);
+        suppr_joueur(j);
+        suppr_monstre(m);
+        exit(0);
     }
 
     else if ( (choice == 113) || (choice == 81) )
@@ -73,6 +78,5 @@ int main()
         exit(0);
     }
 
-    suppr_joueur(j);
     return 0;
 }

@@ -21,6 +21,15 @@ typedef struct
     char **inventaire;
 } joueur;
 
+typedef struct
+{
+    int x;
+    int y;
+    int vie;
+    int attaque;
+    int defence;
+} monstre;
+
 joueur * alloue_joueur();
 
 void suppr_joueur(joueur * j);
