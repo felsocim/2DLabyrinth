@@ -13,7 +13,7 @@
 */
 int main()
 {
-    char filename[256] = "data/grille.txt";
+    char filename[106] = "data/grille.txt";
     int choice;
 
     initscr();
@@ -43,7 +43,11 @@ int main()
         while (j -> vie > 0)
         {
             afficher_grille(g, j, m);
-            mvprintw(g -> n + 1,1,"X: %d, Y: %d, REMAINING LIVES: %d",j -> x, j -> y,j -> vie);
+            mvprintw(g -> n + 1,1,"Attack: %d, Defense: %d, Life: %d",j -> attaque, j -> defense,j -> vie);
+            mvprintw(0, g -> m + 1,"Inventory :");
+            for (int i = 0+2; i < 10+2; i++) {
+                mvprintw(i, g -> m + 2,"%s", j -> inventaire[i-2]);
+            }
             deplacement(g, j);
             if (m -> vie > 0) {
                 deplacement_monstre(g, j, m);

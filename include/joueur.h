@@ -17,7 +17,7 @@ typedef struct
     int y;
     int vie;
     int attaque;
-    int defence;
+    int defense;
     char **inventaire;
 } joueur;
 
@@ -27,7 +27,7 @@ typedef struct
     int y;
     int vie;
     int attaque;
-    int defence;
+    int defense;
 } monstre;
 
 joueur * alloue_joueur();

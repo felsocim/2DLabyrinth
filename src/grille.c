@@ -68,7 +68,7 @@ grille * creer_grille(char filename[], joueur * j)
 */
 void suppr_grille(grille * g)
 {
-    for (int i = 0; i < g -> m; i++) {
+    for (int i = 0; i < g -> n; i++) {
         free (g -> content[i]);
     }
     free(g -> content);
@@ -112,6 +112,12 @@ char afficher_element(int e)
             break;
         case 5 :
             return 'M';
+            break;
+        case 6 :
+            return 'C';
+            break;
+        case 7 :
+            return 'S';
             break;
         case 8 :
             return 'O';
@@ -159,7 +165,8 @@ void afficher_grille(grille * g, joueur * jr, monstre * m)
 void deplacement(grille * g, joueur * j)
 {
     int t = getch();
-    // z=122 q=113 s=115 d=100
+    int test = 42;
+    // z=122 q=113 s=115 d=100 p=112
     switch (t) {
         case 122 :
             if (j -> y == 1)
@@ -181,6 +188,10 @@ void deplacement(grille * g, joueur * j)
             if (g -> content[j -> y ][j -> x + 1] != 1)
                 (j -> x) ++;
             break;
+        case 112 :
+            while (test != 112)
+                test = getch();
+            break;
     }
 
     if ( (g->content[(j -> y)][j -> x]) == 2 )
@@ -192,6 +203,20 @@ void deplacement(grille * g, joueur * j)
             j -> vie++;
             g -> content[j -> y][j -> x] = 0;
         }
+
+    if ( (g->content[(j -> y)][j -> x]) == 6 )
+    {
+        j -> defense = 3;
+        j -> inventaire[0] = "Shield";
+        g -> content[j -> y][j -> x] = 0;
+    }
+
+    if ( (g->content[(j -> y)][j -> x]) == 7 )
+    {
+        j -> attaque = 3;
+        j -> inventaire[1] = "Sword";
+        g -> content[j -> y][j -> x] = 0;
+    }
 }
 
 monstre * creer_monstre(grille * g)
@@ -204,9 +229,9 @@ monstre * creer_monstre(grille * g)
             {
                 m -> x = j;
                 m -> y = i;
-                m -> vie = 3;
-                m -> defence = 1;
-                m -> attaque = 0;
+                m -> vie = 4;
+                m -> defense = 1;
+                m -> attaque = 3;
                 g -> content[i][j] = 0;
             }
 
@@ -269,7 +294,7 @@ void deplacement_monstre(grille * g, joueur * j, monstre * m)
     if ((j -> y == m -> y) && (j -> x == m -> x))
         while (m -> vie > 0)
         {
-            j -> vie = j -> vie - (m -> attaque / j -> defence);
-            m -> vie = m -> vie - (j -> attaque / m -> defence);
+            j -> vie = j -> vie - (m -> attaque / j -> defense);
+            m -> vie = m -> vie - (j -> attaque / m -> defense);
         }
 }
