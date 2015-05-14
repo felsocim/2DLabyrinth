@@ -9,6 +9,7 @@
 #include "../include/joueur.h"
 #include "SDL.h"
 #include "SDL_image.h"
+#include "SDL_ttf.h"
 #include <cairo.h>
 
 #define SCREEN_WIDTH  1376
@@ -19,14 +20,19 @@
 /**
 @brief Main function gets involved all the functions above excepting "printGrille" which has been replaced by "drawGrille"
 */
+
+
 int main()
 {
     char filename[106] = "data/grille.txt";
     int choice;
+	char buffer[500];
 
-    SDL_Surface *screen, *temp, *sprite, *backbg, *monster, *wall, *trap, *life, *sword, *armor, *door;
-	SDL_Rect rcSprite, rcGrass, rcMonster, rcWall, rcTrap, rcLife, rcSword, rcArmor, rcDoor;
+    SDL_Surface *screen, *temp, *sprite, *backbg, *monster, *wall, *trap, *life, *sword, *armor, *door, *text;
+	SDL_Rect rcSprite, rcGrass, rcMonster, rcWall, rcTrap, rcLife, rcSword, rcArmor, rcDoor, rcText;
 	SDL_Event event;
+	TTF_Font *font;
+	SDL_Color white = {255, 255, 255};
 	Uint8 *keystate;
 	int colorkey, colorRect, gameover;
 
@@ -44,6 +50,8 @@ int main()
 
 	colorkey = SDL_MapRGB(screen->format, 255, 0, 255);
 	SDL_SetColorKey(sprite, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+
+	font = TTF_OpenFont("data/fixedsys.ttf", 20);
 
 	temp  = SDL_LoadBMP("data/sol.bmp");
 	backbg = SDL_DisplayFormat(temp);
@@ -66,17 +74,23 @@ int main()
 	temp  = SDL_LoadBMP("data/porte.bmp");
 	door = SDL_DisplayFormat(temp);
 
+
 	SDL_FreeSurface(temp);
 
     joueur * j = alloue_joueur();
     grille * g = creer_grille(filename, j);
     monstre * m = creer_monstre(g);
 
+	
+
 	rcSprite.x = j->x*SPRITE_SIZE;
 	rcSprite.y = j->y*SPRITE_SIZE;
 
 	rcMonster.x = m->x*SPRITE_SIZE;
 	rcMonster.y = m->y*SPRITE_SIZE;
+
+	rcText.x = 32;
+	rcText.y = SCREEN_HEIGHT - 32;
 
     while ((gameover != 1))
     {
@@ -106,6 +120,8 @@ int main()
 
 		if (keystate[SDLK_LEFT] ) {
 		    deplacement(g,j,113);
+			sprintf(buffer, "Remaining lives: %d", j->vie);
+			text = TTF_RenderText_Blended(font, buffer, white);
 			if (g->content[j->y][j->x] == 8)
 				gameover = 1;
 		    if (m -> vie > 0) {
@@ -118,6 +134,8 @@ int main()
 		}
 		if (keystate[SDLK_RIGHT] ) {
 			deplacement(g,j,100);
+			sprintf(buffer, "Remaining lives: %d", j->vie);
+			text = TTF_RenderText_Blended(font, buffer, white);
 			if (g->content[j->y][j->x] == 8)
 				gameover = 1;
 			if (m -> vie > 0) {
@@ -130,6 +148,8 @@ int main()
 		}
 		if (keystate[SDLK_UP] ) {
 			deplacement(g,j,122);
+			sprintf(buffer, "Remaining lives: %d", j->vie);
+			text = TTF_RenderText_Blended(font, buffer, white);
 			if (g->content[j->y][j->x] == 8)
 				gameover = 1;
 			if (m -> vie > 0) {
@@ -142,6 +162,8 @@ int main()
 		}
 		if (keystate[SDLK_DOWN] ) {
 			deplacement(g,j,115);
+			sprintf(buffer, "Remaining lives: %d", j->vie);
+			text = TTF_RenderText_Blended(font, buffer, white);
 			if (g->content[j->y][j->x] == 8)
 				gameover = 1;
 			if (m -> vie > 0) {
@@ -218,6 +240,8 @@ int main()
 			}
 		}
 
+		SDL_BlitSurface(text, NULL, screen, &rcText);		
+		
 		SDL_BlitSurface(sprite, NULL, screen, &rcSprite);
 
 		SDL_BlitSurface(monster, NULL, screen, &rcMonster);
