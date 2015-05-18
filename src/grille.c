@@ -162,9 +162,8 @@ void afficher_grille(grille * g, joueur * jr, monstre * m)
                      2 -> contents a trap (decrease the count of lives)
                      3 -> contents a new life
                      */
-void deplacement(grille * g, joueur * j)
+void deplacement(grille * g, joueur * j, int t)
 {
-    int t = getch();
     int test = 42;
     // z=122 q=113 s=115 d=100 p=112
     switch (t) {

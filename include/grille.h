@@ -33,7 +33,7 @@ char afficher_element(int e);
 
 void afficher_grille(grille * g, joueur * jr, monstre * m);
 
-void deplacement(grille * g, joueur * j);
+void deplacement(grille * g, joueur * j, int t);
 
 monstre * creer_monstre(grille * g);
 

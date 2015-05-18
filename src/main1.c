@@ -15,6 +15,7 @@ int main()
 {
     char filename[106] = "data/grille.txt";
     int choice;
+    int dir;
 
     initscr();
     mvprintw(2,2,"LABYRINTH GAME v.1");
@@ -48,7 +49,8 @@ int main()
             for (int i = 0+2; i < 10+2; i++) {
                 mvprintw(i, g -> m + 2,"%s", j -> inventaire[i-2]);
             }
-            deplacement(g, j);
+            dir = getch();
+            deplacement(g, j, dir);
             if (m -> vie > 0) {
                 deplacement_monstre(g, j, m);
             }
