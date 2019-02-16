@@ -40,8 +40,7 @@ void drawRectCairo(SDL_Surface *screen) {
 
 int main()
 {
-    char filename[106] = "data/grille.txt";
-    int choice;
+  char filename[106] = "data/grille.txt";
 	char buffer[500];
 	char buffer2[300];
 
