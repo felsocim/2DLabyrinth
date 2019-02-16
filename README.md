@@ -25,10 +25,20 @@ If you prefer to compile only one of the two versions, specify the build target 
 
 ## Run
 
-The compilation produces two executable files:
+The compilation produces two executable files in the project's root directory:
 
-1. **2DLabCLI** the textual version which can be run from a terminal
-2. **2DLabGUI** the graphical version which can be run by double clicking on the binary file
+1. **2DLabCLI** representing the textual version which can be run from a terminal
+2. **2DLabGUI** representing the graphical version which can be run by double clicking on the binary file
+
+## Screenshots
+
+### Graphical version
+
+![Screenshot of the graphical version](guiscreen.png)
+
+### Textual version
+
+![Screenshot of the textual version](cliscreen.png)
 
 ## Documentation
 
