@@ -1,39 +1,30 @@
 CC = gcc
-LIBS = `pkg-config --cflags --libs sdl --libs cairo --libs SDL_image --libs SDL_ttf`
+LDFLAGS = `pkg-config --cflags --libs sdl --libs cairo --libs SDL_image --libs SDL_ttf`
 STD = -std=c99
-CFLAGS = -Wall -g
+CFLAGS = -Wall -g -no-pie
 
-all : bin/main1 bin/main2
+all : 2DLabCLI 2DLabGUI
 
-bin/main1 : obj/main1.o obj/grille.o obj/joueur.o bin_dir
-	$(CC) $(CFLAGS) -o main1 obj/main1.o obj/grille.o obj/joueur.o -lncurses $(STD)
-	mv main1 bin/.
+2DLabCLI : cli
+	$(CC) $(CFLAGS) obj/2DLabCLI.o obj/grille.o obj/joueur.o -o 2DLabCLI -lncurses $(STD)
 
-bin/main2 : obj/main2.o obj/grille.o obj/joueur.o bin_dir
-	$(CC) $(CFLAGS) obj/main2.o obj/grille.o obj/joueur.o -o main2 -lncurses $(LIBS)
-	mv main2 bin/.
+2DLabGUI : gui
+	$(CC) $(CFLAGS) obj/2DLabGUI.o obj/grille.o obj/joueur.o -o 2DLabGUI -lncurses $(LDFLAGS)
 
-obj/grille.o : src/grille.c include/grille.h obj_dir
-	$(CC) $(CFLAGS) -c src/grille.c $(STD)
-	mv grille.o obj/.
+grille : obj src/grille.c include/grille.h
+	$(CC) $(CFLAGS) -c src/grille.c $(STD) -o obj/grille.o
 
-obj/joueur.o : src/joueur.c include/joueur.h obj_dir
-	$(CC) $(CFLAGS) -c src/joueur.c $(STD)
-	mv joueur.o obj/.
+joueur : obj src/joueur.c include/joueur.h
+	$(CC) $(CFLAGS) -c src/joueur.c $(STD) -o obj/joueur.o
 
-obj/main1.o : src/main1.c include/grille.h include/joueur.h obj_dir
-	$(CC) $(CFLAGS) -c src/main1.c $(STD)
-	mv main1.o obj/.
+cli : grille joueur src/main1.c
+	$(CC) $(CFLAGS) -c src/main1.c $(STD) -o obj/2DLabCLI.o
 
-obj/main2.o : src/main2.c include/grille.h include/joueur.h obj_dir
-	$(CC) $(CFLAGS) -c src/main2.c $(STD) $(LIBS)
-	mv main2.o obj/.
+gui : grille joueur src/main2.c
+	$(CC) $(CFLAGS) -c src/main2.c $(STD) -o obj/2DLabGUI.o $(LDFLAGS)
 
-obj_dir :
-	[ -d obj ] || mkdir obj
-
-bin_dir :
-	[ -d bin ] || mkdir bin
+obj :
+	test -d obj || mkdir obj
 
 clean :
-	rm obj/* bin/*
+	rm -rf obj 2DLabCLI 2DLabGUI
